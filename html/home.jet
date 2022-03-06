@@ -73,6 +73,8 @@
 
         socket.onmessage = message => {
             console.log('message: ', message);
+            const j = JSON.parse(message.data);
+            console.log('j', j);
         }
     });
 </script>
