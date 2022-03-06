@@ -112,6 +112,13 @@ func ListenToWsChannel() {
 			response.Action = "listUsers"
 			response.ConnectedUsers = users
 			broadcastToAll(response)
+
+		case "left":
+			response.Action = "listUsers"
+			delete(clients, event.Conn)
+			users := getUserList()
+			response.ConnectedUsers = users
+			broadcastToAll(response)
 		}
 	}
 }

@@ -29,6 +29,7 @@
         <div class="row">
             <div class="col-md-8">
                 <h3>Chat</h1>
+                <p><a href="https://github.com">Go to Github</a></p>
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input id="username" class="form-control" type="text" autocomplete="off">
@@ -56,6 +57,13 @@
 ></script>
 <script>
     let socket = null;
+
+    window.onbeforeunload = () => {
+        console.log('Leaving');
+        let data = {}
+        data['action'] = 'left';
+        socket.send(JSON.stringify(data));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         socket = new WebSocket('ws://127.0.0.1:8080/ws');
