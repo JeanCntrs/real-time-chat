@@ -99,10 +99,6 @@ func ListenToWsChannel() {
 	for {
 		event := <-wsChan
 
-		// response.Action = "Got here"
-		// response.Message = fmt.Sprintf("Some message, and action was %s", event.Action)
-		// broadcastToAll(response)
-
 		switch event.Action {
 		case "username":
 			// Get a list of all users and send it back via broadcast
@@ -127,7 +123,9 @@ func getUserList() []string {
 	var userList []string
 
 	for _, client := range clients {
-		userList = append(userList, client)
+		if client != "" {
+			userList = append(userList, client)
+		}
 	}
 
 	sort.Strings(userList)
