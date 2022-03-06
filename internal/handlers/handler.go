@@ -54,6 +54,7 @@ func WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	log.Println("Client connected to endpoint")
 
 	var response WsJsonResponse
+
 	response.Message = "<em><small>Connected to server</small></em>"
 
 	err = ws.WriteJSON(response)
