@@ -35,9 +35,11 @@
                     <input id="username" class="form-control" type="text" autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label for="message">Username:</label>
+                    <label for="message">Message:</label>
                     <input id="message" class="form-control" type="text" autocomplete="off">
                 </div>
+                <hr>
+                <a href="javascript:void(0);" id="btn_send_message" class="btn btn-outline-secondary">Send Message</a>
                 <input id="action" type="hidden">
                 <hr>
                 <div id="output" class="chatbox">
@@ -57,6 +59,9 @@
 ></script>
 <script>
     let socket = null;
+    let output = document.getElementById('output');
+    let userField = document.getElementById('username');
+    let messageField = document.getElementById('message');
 
     window.onbeforeunload = () => {
         console.log('Leaving');
@@ -99,6 +104,11 @@
                     }
 
                     break;
+
+                case 'broadcast':
+                    output.innerHTML += data.message + '<br>';
+
+                    break;
             }
         }
 
@@ -112,6 +122,55 @@
 
             socket.send(JSON.stringify(data));
         });
+
+        document.getElementById('message').addEventListener('keydown', (event) => {
+            if (event.code === 'Enter') {
+                if (!socket) {
+                    console.log('No connection');
+                    return
+                }
+                
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (userField.value.trim() === '') {
+                    alert('Invalid username');
+                    return
+                }
+
+                if (messageField.value.trim() === '') {
+                    alert('Invalid message');
+                    return
+                }
+
+                sendMessage();
+            }
+        })
+
+        document.getElementById('btn_send_message').addEventListener('click', () => {
+            if (userField.value.trim() === '') {
+                alert('Invalid username');
+                return
+            }
+
+            if (messageField.value.trim() === '') {
+                alert('Invalid message');
+                return
+            }
+
+            sendMessage();
+        })
     });
+
+    const sendMessage = () => {
+        const data = {
+            action: 'broadcast',
+            username: document.getElementById('username').value,
+            message: document.getElementById('message').value
+        }
+
+        socket.send(JSON.stringify(data));
+        document.getElementById('message').value = '';
+    }
 </script>
 </html>
