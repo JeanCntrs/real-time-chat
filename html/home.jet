@@ -29,14 +29,13 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col">
-                <h1 class="mt-3">This is the home page</h1>
+            <div class="col mb-4">
+                <h1 class="mt-3">WebSocket App</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-md-8">
                 <h3>Chat</h1>
-                <p><a href="https://github.com">Go to Github</a></p>
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input id="username" class="form-control" type="text" autocomplete="off">
@@ -48,8 +47,10 @@
                 <hr>
                 <a href="javascript:void(0);" id="btn_send_message" class="btn btn-outline-secondary">Send Message</a>
                 <input id="action" type="hidden">
-                <hr>
-                <div id="output" class="chatbox">
+                <div id="status" class="mt-2 float-end">
+
+                </div>
+                <div id="output" class="chatbox mt-3">
                 </div>
             </div>
             <div class="col-md-4">
@@ -87,16 +88,23 @@
     document.addEventListener('DOMContentLoaded', () => {
         socket = new ReconnectingWebSocket('ws://127.0.0.1:8080/ws', null, { debug: true, reconectInterval: 3000 });
 
+        const offline = '<span class="badge bg-danger">Not connected</span>';
+        const online = '<span class="badge bg-success">Connected</span>';
+        let statusDiv = document.getElementById('status');
+
         socket.onopen = () => {
             console.log('Successfully connected');
+            statusDiv.innerHTML = online;
         }
 
         socket.onclose = () => {
             console.log('Connection closed');
+            statusDiv.innerHTML = offline;
         }
 
         socket.onerror = error => {
             console.log('There was an error: ', error);
+            statusDiv.innerHTML = offline;
         }
 
         socket.onmessage = message => {
